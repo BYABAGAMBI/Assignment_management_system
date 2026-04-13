@@ -1,0 +1,446 @@
+<?php
+$page_title = 'Submit Assignment - School Management System';
+$current_page = 'submit_assignment';
+require_once 'navigation_template.php';
+?>
+
+<style>
+    .main-container {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    h1, h2 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 32px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #555;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    input[type="text"], input[type="date"], input[type="number"], select, textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        font-size: 16px;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.8);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #667eea;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        background: white;
+    }
+    
+    .error {
+        color: #e74c3c;
+        font-size: 14px;
+        margin-top: 8px;
+        display: block;
+        font-weight: 500;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        width: 100%;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .assignment-list {
+        margin-top: 30px;
+    }
+    
+    .assignment-item {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #667eea;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .assignment-item:hover {
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateX(5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .radio-group {
+        margin: 30px 0;
+        text-align: center;
+    }
+    
+    .radio-group label {
+        display: inline-block;
+        margin: 0 20px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .radio-group input[type="radio"] {
+        margin-right: 8px;
+    }
+
+    .radio-group label:hover {
+        background: rgba(102, 126, 234, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .main-container {
+            margin: 20px auto;
+        }
+
+        .container {
+            padding: 25px;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        .radio-group label {
+            display: block;
+            margin: 10px 0;
+        }
+    }
+</style>
+
+<div class="main-container">
+    <div class="container fade-in">
+        <h1>Assignment Submission Form</h1>
+        <form id="assignmentForm" action="save_assignment.php" method="POST">
+            <div class="form-group">
+                <label for="student_name">Student Name:</label>
+                <input type="text" id="student_name" name="student_name">
+                <span class="error" id="student_name_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="student_id">Student ID:</label>
+                <input type="text" id="student_id" name="student_id">
+                <span class="error" id="student_id_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <select id="subject" name="subject">
+                    <option value="">-- Select Subject --</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="English">English</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="Computer Science">Computer Science</option>
+                </select>
+                <span class="error" id="subject_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="assignment_title">Assignment Title:</label>
+                <input type="text" id="assignment_title" name="assignment_title">
+                <span class="error" id="assignment_title_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="due_date">Due Date:</label>
+                <input type="date" id="due_date" name="due_date">
+                <span class="error" id="due_date_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="marks_obtained">Marks Obtained:</label>
+                <input type="number" id="marks_obtained" name="marks_obtained" min="0" max="100">
+                <span class="error" id="marks_obtained_error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks" name="remarks" rows="4"></textarea>
+                <span class="error" id="remarks_error"></span>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Assignment</button>
+        </form>
+    </div>
+
+    <div class="container assignment-list fade-in">
+        <h2>Sample Assignments</h2>
+        
+        <div class="radio-group">
+            <label><input type="radio" name="filter" value="all" checked> Show All</label>
+            <label><input type="radio" name="filter" value="Mathematics"> Mathematics</label>
+            <label><input type="radio" name="filter" value="Science"> Science</label>
+            
+            
+        </div>
+
+        <div id="assignmentsList"></div>
+    </div>
+</div>
+
+<script>
+    // Sample assignments data
+    const sampleAssignments = [
+        {
+            student_name: "Allan Ruhunda",
+            student_id: "20230001",
+            subject: "Mathematics",
+            assignment_title: "Calculus Problem Set",
+            due_date: "2024-01-15",
+            marks_obtained: 85,
+            remarks: "Good work on derivatives"
+        },
+        {
+            student_name: "Kaddu Geofery",
+            student_id: "20230002",
+            subject: "Science",
+            assignment_title: "Physics Lab Report",
+            due_date: "2024-01-20",
+            marks_obtained: 92,
+            remarks: "Excellent experimental design"
+        },
+        {
+            student_name: "Karungi Kellen",
+            student_id: "20230003",
+            subject: "Mathematics",
+            assignment_title: "Linear Algebra Quiz",
+            due_date: "2024-01-18",
+            marks_obtained: 78,
+            remarks: "Needs improvement on matrices"
+        },
+        {
+            student_name: "Murungi Susan",
+            student_id: "20230004",
+            subject: "English",
+            assignment_title: "Essay Analysis",
+            due_date: "2024-01-22",
+            marks_obtained: 88,
+            remarks: "Strong thesis statement"
+        },
+        {
+            student_name: "Murungi Susan",
+            student_id: "20230006",
+            subject: "History",
+            assignment_title: "Essay Analysis",
+            due_date: "2024-01-26",
+            marks_obtained: 88,
+            remarks: "Strong thesis statement"
+        },
+        {
+            student_name: "Bright Daneil",
+            student_id: "20230005",
+            subject: "Science",
+            assignment_title: "Chemistry Experiment",
+            due_date: "2024-01-25",
+            marks_obtained: 95,
+            remarks: "Outstanding lab work"
+        }
+    ];
+
+    // Form validation
+    document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Clear previous errors
+        const errorElements = document.querySelectorAll('.error');
+        errorElements.forEach(element => element.textContent = '');
+        
+        let isValid = true;
+        
+        // Validate Student Name
+        const studentName = document.getElementById('student_name').value.trim();
+        if (studentName === '') {
+            document.getElementById('student_name_error').textContent = 'Student name is required';
+            isValid = false;
+        } else if (studentName.length < 3) {
+            document.getElementById('student_name_error').textContent = 'Student name must be at least 3 characters';
+            isValid = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(studentName)) {
+            document.getElementById('student_name_error').textContent = 'Student name must contain letters only';
+            isValid = false;
+        }
+        
+        // Validate Student ID
+        const studentId = document.getElementById('student_id').value.trim();
+        if (studentId === '') {
+            document.getElementById('student_id_error').textContent = 'Student ID is required';
+            isValid = false;
+        } else if (!/^\d{8}$/.test(studentId)) {
+            document.getElementById('student_id_error').textContent = 'Student ID must be exactly 8 digits';
+            isValid = false;
+        }
+        
+        // Validate Subject
+        const subject = document.getElementById('subject').value;
+        if (subject === '') {
+            document.getElementById('subject_error').textContent = 'Please select a subject';
+            isValid = false;
+        }
+        
+        // Validate Assignment Title
+        const assignmentTitle = document.getElementById('assignment_title').value.trim();
+        if (assignmentTitle === '') {
+            document.getElementById('assignment_title_error').textContent = 'Assignment title is required';
+            isValid = false;
+        } else if (assignmentTitle.length < 5) {
+            document.getElementById('assignment_title_error').textContent = 'Assignment title must be at least 5 characters';
+            isValid = false;
+        }
+        
+        // Validate Due Date
+        const dueDate = document.getElementById('due_date').value;
+        if (dueDate === '') {
+            document.getElementById('due_date_error').textContent = 'Due date is required';
+            isValid = false;
+        } else {
+            const selectedDate = new Date(dueDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            if (selectedDate < today) {
+                document.getElementById('due_date_error').textContent = 'Due date cannot be in the past';
+                isValid = false;
+            }
+        }
+        
+        // Validate Marks Obtained
+        const marksObtained = document.getElementById('marks_obtained').value;
+        if (marksObtained === '') {
+            document.getElementById('marks_obtained_error').textContent = 'Marks obtained is required';
+            isValid = false;
+        } else {
+            const marks = parseInt(marksObtained);
+            if (isNaN(marks) || marks < 0 || marks > 100) {
+                document.getElementById('marks_obtained_error').textContent = 'Marks must be between 0 and 100';
+                isValid = false;
+            }
+        }
+        
+        // If all validations pass, submit the form
+        if (isValid) {
+            this.submit();
+        }
+    });
+
+    // Display assignments function
+    function displayAssignments(filter = 'all') {
+        const assignmentsList = document.getElementById('assignmentsList');
+        assignmentsList.innerHTML = '';
+        
+        // Debug: Check if sampleAssignments exists
+        if (!sampleAssignments || sampleAssignments.length === 0) {
+            assignmentsList.innerHTML = '<p>No assignment data available.</p>';
+            return;
+        }
+        
+        console.log('Filter:', filter);
+        console.log('Total assignments:', sampleAssignments.length);
+        
+        const filteredAssignments = sampleAssignments.filter(assignment => {
+            if (filter === 'all') return true;
+            return assignment.subject === filter;
+        });
+        
+        console.log('Filtered assignments:', filteredAssignments.length);
+        
+        if (filteredAssignments.length === 0) {
+            assignmentsList.innerHTML = '<p>No assignments found for the selected filter.</p>';
+            return;
+        }
+        
+        filteredAssignments.forEach(assignment => {
+            const assignmentDiv = document.createElement('div');
+            assignmentDiv.className = 'assignment-item';
+            
+            // Ensure proper display of student names
+            const studentName = assignment.student_name.toString().trim();
+            const subject = assignment.subject.toString().trim();
+            const assignmentTitle = assignment.assignment_title.toString().trim();
+            const dueDate = assignment.due_date.toString().trim();
+            const remarks = assignment.remarks ? assignment.remarks.toString().trim() : '';
+            
+            assignmentDiv.innerHTML = `
+                <strong>${studentName} (${assignment.student_id})</strong><br>
+                <strong>Subject:</strong> ${subject}<br>
+                <strong>Assignment:</strong> ${assignmentTitle}<br>
+                <strong>Due Date:</strong> ${dueDate}<br>
+                <strong>Marks:</strong> ${assignment.marks_obtained}/100<br>
+                ${remarks ? `<strong>Remarks:</strong> ${remarks}` : ''}
+            `;
+            assignmentsList.appendChild(assignmentDiv);
+        });
+    }
+
+    // Radio button event listeners
+    document.querySelectorAll('input[name="filter"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            displayAssignments(this.value);
+        });
+    });
+    
+    // Initial display of all assignments - ensure DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        displayAssignments('all');
+    });
+    
+    // Also try immediate display in case DOMContentLoaded already fired
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            displayAssignments('all');
+        });
+    } else {
+        displayAssignments('all');
+    }
+</script>
+
+<?php require_once 'footer_template.php'; ?>
